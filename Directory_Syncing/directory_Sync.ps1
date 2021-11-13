@@ -11,18 +11,6 @@ $sourceFiles=Get-ChildItem -Path $source -Recurse
 $targetFiles=Get-ChildItem -Path $target -Recurse
 
 $syncMode=2
-<#
-Write-Host $sourceFiles
-Write-Host $targetFiles
-
-foreach($f in $sourceFiles) {
-    Write-Host $f
-}
-foreach($f in $targetFiles) {
-    Write-Host $f
-}
-#>
-
 
 try {
     # Identify file content differences for target and source directories; then copy any which aren't in the target dir
@@ -34,7 +22,7 @@ try {
             $fullSourceObject=$f.InputObject.FullName
             $fullTargetObject=$f.InputObject.FullName.Replace($source, $target)
     
-            Write-Host "Attemp to copy the following: " $filename
+            Write-Host "Attempt to copy the following: " $filename
             Copy-Item -Path $fullSourceObject -Destination $fullTargetObject
         }
     }
