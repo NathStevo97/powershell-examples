@@ -7,5 +7,6 @@ Simply configure the source and target directories as required (comment out the 
 The script checks both directories and if any are found in the source directory that don't exist in the target directory; they are copied across.
 
 Areas for improvement could be:
+- Manage use case for empty target dir (throws error using Compare-Object)
 - Copying from target to source (full directory sync)
 - Multiple target dirs e.g. local and USB dirs
