@@ -17,7 +17,10 @@ try {
         Write-Host "Target Directory Empty - Transferring All FIles"
         foreach($file in $sourceFiles) {
             Write-Host "Attempting to Copy " $file.BaseName
-            Copy-Item -Path $file -Destination $target
+	    $sourcePath = -join($source, "\", $file)
+            $targetPath = -join($target, "\", $file)
+            Copy-Item -Path $sourcePath -Destination $targetPath
+	    Write-Host "Copy Successful"
         }
     }
     else {
@@ -28,8 +31,9 @@ try {
                 $fileName = $f.InputObject
                 $sourcePath = -join($source, "\", $fileName)
                 $targetPath = -join($target, "\", $fileName)
-                Write-Host "Attempt to copy the following: " $fileName
+                Write-Host "Attempting to copy the following: " $fileName
                 Copy-Item -Path $sourcePath -Destination $targetPath
+		Write-Host "Copy Successful"
         }
     }
     }
