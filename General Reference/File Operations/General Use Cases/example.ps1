@@ -21,3 +21,12 @@ Test-Path 'C:\NewFolderForPowerShell\New File.txt'
 
 # Retrieve Content from a File
 Get-Content 'E:\TargetFolder\TargetFile.txt'
+
+# Erase Content from File
+Clear-Content G:\padmini\SourceFolder\NewHtmlFile.html
+
+# Append Text to File
+Add-Content G:\padmini\SourceFolder\NewHtmlFile.html "<html><h2>PowerShell is a more powerful scripting language</h2></html>"
+
+# Compare two text files
+Compare-Object -ReferenceObject $(Get-Content G:\padmini\SourceFolder\NewPSNote.txt) -DifferenceObject $(Get-Content G:\padmini\SourceFolder\PSNote.txt)
