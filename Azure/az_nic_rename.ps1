@@ -5,21 +5,8 @@ Rename Azure VM Network Interfaces.
 .DESCRIPTION
 Rename single or multiple Network Adapter interfaces attached to an Azure Virtual Machine (Linux and Windows).
 
-.NOTES
-File Name : Rename-AzVMNIC.ps1
-Author : Microsoft MVP/MCT - Charbel Nemnom
-Version : 1.4
-Date : 22-September-2019
-Update : 30-June-2022
-Requires : PowerShell 5.1 or PowerShell 7.1.x (Core)
-Module : Az Module
-OS : Windows or Linux VMs
-
-.LINK
-To provide feedback or for further assistance please visit: https://charbelnemnom.com
-
 .EXAMPLE
-.\Rename-AzVMNIC.ps1 -resourceGroup [ResourceGroupName] -VMName [VMName] -NewNicName [NewNicName] -Verbose
+.\Rename-AzVMNIC.ps1 -resourceGroup [ResourceGroupName] -VMName [VMName] -NewNicName [NewNicName] -Subscription [AzSub] -Verbose
 This example will rename the NIC interface for the specified VM, you need to specify the Resource Group name, VM name, and the new NIC name.
 The script will preserve the old network settings and apply them to the new network interface.
 #>
@@ -34,11 +21,11 @@ Param (
 [Alias('VM')]
 [String]$VMName,
 
-[Parameter(Position = 2, HelpMessage = 'Enter New NIC name')]
+[Parameter(Position = 2, Mandatory = $True, HelpMessage = 'Enter New NIC name')]
 [Alias('NIC')]
 [String]$NewNicName
 
-[Parameter(Position = 3, HelpMessage = 'Enter Azure Subscription ID')]
+[Parameter(Position = 3, Mandatory = $True, HelpMessage = 'Enter Azure Subscription ID')]
 [Alias('SUB')]
 [String]$AzSub
 )
@@ -52,8 +39,6 @@ Catch {
 Write-Warning "Cannot connect to Azure Cloud. Please check your credentials. Exiting!"
 Break
 }
-
-#Set-AzContext -SubscriptionId "78f95271-f9a8-4a75-9ce8-222e96323a7b"
 
 Set-AzContext -SubscriptionId $AzSub
 
