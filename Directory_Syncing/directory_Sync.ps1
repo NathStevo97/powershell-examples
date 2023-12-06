@@ -20,8 +20,8 @@ try {
             Write-Host "Attempting to Copy " $file.Name
 	        $sourcePath = -join($source, "\", $file.Name)
             $targetPath = -join($target, $file.Name)
-            Write-Host "Source: " $sourcePath
-            Write-Host "Target: " $targetPath
+            #Write-Host "Source: " $sourcePath
+            #Write-Host "Target: " $targetPath
             Copy-Item -Path $sourcePath -Destination $targetPath
 	    Write-Host "Copy Successful" -ForegroundColor green
         }
@@ -37,13 +37,13 @@ try {
                 Write-Host "File Name: " $fileName
                 $sourcePath = -join($source, "\", $fileName)
                 $targetPath = -join($target, $fileName)
-                Write-Host "Source: " $sourcePath
-                Write-Host "Target: " $targetPath
-                Write-Host "Attempting to copy the following: " $fileName
+                #Write-Host "Source: " $sourcePath
+                #Write-Host "Target: " $targetPath
+                Write-Host "Attempting to copy: " $fileName
                 Copy-Item -Path $sourcePath -Destination $targetPath
 		Write-Host "Copy Successful" -ForegroundColor green
+            }
         }
-    }
     }
 }
 catch {
