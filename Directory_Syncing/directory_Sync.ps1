@@ -1,6 +1,6 @@
 $source="C:\Users\natst\Documents\Programming\powershell-examples\Directory_Syncing\OldDir"
 # Directory on System
-#$target="C:\Users\natst\Documents\Programming\Powershell_Practice\Directory_Syncing\NewDir"
+#$target="C:\Users\natst\Documents\Programming\powershell-examples\Directory_Syncing\NewDir"
 
 # USB Directory - Uncomment below two lines and line three if transferring to a USB
 $targetLetter = volume | ? drivetype -eq removable | % driveletter # Auto-Find USB Drive Letter
@@ -10,16 +10,19 @@ $target="${targetLetter}:\"
 $sourceFiles=Get-ChildItem -Path $source
 $targetFiles=Get-ChildItem -Path $target # returns null if empty target directory
 
+#Write-Host $sourceFiles
+#Write-Host $targetFiles
+
 $syncMode=2
 
 try {
     if ($targetFiles -eq $null) {
-        Write-Host "Target Directory Empty - Transferring All Files"
+        Write-Host "Target Directory Empty - Transferring All Files" -ForegroundColor green
         foreach($file in $sourceFiles) {
-            #Write-Host "File path: " $file
+            Write-Host "File path: " $file
             Write-Host "Attempting to Copy " $file.Name
 	        $sourcePath = -join($source, "\", $file.Name)
-            $targetPath = -join($target, $file.Name)
+            $targetPath = -join($target, "\", $file.Name)
             #Write-Host "Source: " $sourcePath
             #Write-Host "Target: " $targetPath
             Copy-Item -Path $sourcePath -Destination $targetPath
@@ -28,9 +31,14 @@ try {
     }
     else {
         # Identify file content differences for target and source directories; then copy any which aren't in the target dir
-        Write-Host "Target Directory Not Empty - Determining Files for Transfer"
+        Write-Host "Target Directory Not Empty - Determining Files for Transfer" -ForegroundColor yellow
         $diff=Compare-Object -ReferenceObject $sourceFiles.Name -DifferenceObject $targetFiles.Name
         #Write-Host $diff
+        if ($diff -eq $null) {
+            Write-Host "No Files Require Transfer - Exiting in 5 seconds" -ForegroundColor green
+            Start-Sleep -s 5
+            Break
+        }
         foreach($f in $diff) {
             if($f.SideIndicator -eq "<=") {
                 $fileName = $f.InputObject
