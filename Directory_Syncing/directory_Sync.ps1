@@ -1,10 +1,10 @@
 $source="C:\Users\natst\Documents\Programming\powershell-examples\Directory_Syncing\OldDir"
 # Directory on System
-#$target="C:\Users\natst\Documents\Programming\powershell-examples\Directory_Syncing\NewDir"
+$target="C:\Users\natst\Documents\Programming\powershell-examples\Directory_Syncing\NewDir"
 
 # USB Directory - Uncomment below two lines and line three if transferring to a USB
-$targetLetter = volume | ? drivetype -eq removable | % driveletter # Auto-Find USB Drive Letter
-$target="${targetLetter}:\"
+#$targetLetter = volume | ? drivetype -eq removable | % driveletter # Auto-Find USB Drive Letter
+#$target="${targetLetter}:\"
 
 # Get list of files in source and target directories
 $sourceFiles=Get-ChildItem -Path $source
@@ -53,6 +53,8 @@ try {
             }
         }
     }
+    Write-Host "All Files Transferred - Exiting in 5 Seconds" -ForegroundColor green
+    Start-Sleep -s 5
 }
 catch {
     Write-Error -Message "something bad happened!" -ErrorAction Stop
