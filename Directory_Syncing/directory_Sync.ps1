@@ -6,10 +6,14 @@ $sectionBreak = "=============================="
 $subSectionBreak = "------------------------------"
 
 # Local Directories
+
+## Source Directory - Update As Required
 $source = "C:\Users\natst\Documents\Programming\powershell-examples\Directory_Syncing\OldDir"
+
+## Target Directory - Comment if Targeting USB
 $target = "C:\Users\natst\Documents\Programming\powershell-examples\Directory_Syncing\NewDir"
 
-# USB Directory - Uncomment below two lines and comment line three if transferring to a USB
+# USB Directory - Uncomment if Targeting USB
 #$targetLetter = volume | ? drivetype -eq removable | % driveletter # Auto-Find USB Drive Letter
 #$target="${targetLetter}:\"
 
@@ -100,7 +104,6 @@ function copyFiles ($sourceFiles) {
 
     Write-Progress -Activity "Copying files" -Completed
 }
-
 
 # Get source file list
 $sourceFiles = listFiles $source
