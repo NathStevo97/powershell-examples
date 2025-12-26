@@ -8,14 +8,14 @@ $subSectionBreak = "------------------------------"
 # Local Directories
 
 ## Source Directory - Update As Required
-$source = "C:\Users\natst\Documents\Programming\powershell-examples\Directory_Syncing\OldDir"
+$sourcePath = "C:\Users\natst\Documents\Programming\powershell-examples\Directory_Syncing\OldDir"
 
 ## Target Directory - Comment if Targeting USB
-$target = "C:\Users\natst\Documents\Programming\powershell-examples\Directory_Syncing\NewDir"
+$targetPath = "C:\Users\natst\Documents\Programming\powershell-examples\Directory_Syncing\NewDir"
 
 # USB Directory - Uncomment if Targeting USB
-#$targetLetter = volume | ? drivetype -eq removable | % driveletter # Auto-Find USB Drive Letter
-#$target="${targetLetter}:\"
+#$targetPathLetter = volume | ? drivetype -eq removable | % driveletter # Auto-Find USB Drive Letter
+#$targetPath="${targetPathLetter}:\"
 
 #
 # Functions
@@ -34,7 +34,7 @@ function getFilesToCopy ($sourceFiles, $targetFiles) {
         -DifferenceObject $targetFiles `
         -Property Name `
         -PassThru |
-        Where-Object { $_.SideIndicator -eq "<=" }
+    Where-Object { $_.SideIndicator -eq "<=" }
 
     if (-not $diff) {
         Write-Host "No Files to Transfer" -ForegroundColor green
@@ -53,19 +53,24 @@ function getFilesToCopy ($sourceFiles, $targetFiles) {
 # Copy Files
 function copyFiles ($sourceFiles) {
 
+    # Progress Tracking Variables
     $totalFiles = $sourceFiles.Count
     $totalBytes = ($sourceFiles | Measure-Object Length -Sum).Sum
 
+    # File and Byte Counters
     $filesCopied = 0
     $bytesCopied = 0
 
+    # Start stopwatch for ETA calculation
     $stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
 
+    # Copy Each File with Progress
     foreach ($file in $sourceFiles) {
 
         $filesCopied++
 
-        $destination = Join-Path $target $file.Name
+        # Construct destination path
+        $destination = Join-Path $targetPath $file.Name
 
         # Copy the file
         Copy-Item -Path $file.FullName -Destination $destination -Force
@@ -79,13 +84,15 @@ function copyFiles ($sourceFiles) {
         $elapsedSeconds = $stopwatch.Elapsed.TotalSeconds
         $bytesPerSecond = if ($elapsedSeconds -gt 0) {
             $bytesCopied / $elapsedSeconds
-        } else {
+        }
+        else {
             0
         }
 
         $remainingSeconds = if ($bytesPerSecond -gt 0) {
             ($totalBytes - $bytesCopied) / $bytesPerSecond
-        } else {
+        }
+        else {
             0
         }
 
@@ -96,20 +103,21 @@ function copyFiles ($sourceFiles) {
                 $filesCopied, `
                 $totalFiles, `
                 $file.Name, `
-                ([TimeSpan]::FromSeconds($remainingSeconds))) `
+            ([TimeSpan]::FromSeconds($remainingSeconds))) `
             -PercentComplete $percentComplete
     }
 
+    # CleanUp Progress Bar
     $stopwatch.Stop()
 
     Write-Progress -Activity "Copying files" -Completed
 }
 
 # Get source file list
-$sourceFiles = listFiles $source
+$sourceFiles = listFiles $sourcePath
 
 # Get target file list - returns null if empty target directory
-$targetFiles = listFiles $target
+$targetFiles = listFiles $targetPath
 
 # Start Script Debug
 Write-Host $sectionBreak -ForegroundColor cyan
@@ -165,10 +173,6 @@ try {
         }
 
     }
-
-    Write-Host "All Files Transferred - Script will Automatically Exit..." -ForegroundColor green
-
-    Start-Sleep -s 5
 }
 
 catch {
@@ -176,6 +180,8 @@ catch {
     Write-Error -Message "There was an error during the directory sync process." -ErrorAction Stop
 
 }
+
+Write-Host "All Files Transferred - Script will Automatically Exit..." -ForegroundColor green
 
 # End Script Debug
 Write-Host $sectionBreak -ForegroundColor cyan
